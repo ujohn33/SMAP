@@ -1724,7 +1724,7 @@ def s_number_small_peaks(df):
     def calc_small_peaks(cons: List[pl.Series]):
         # Check if the group has enough data
         if len(cons[0]) < 240:
-            return np.NaN
+            return pl.Null
         # Extract the data
         data = cons[0].to_numpy()[:weekdays]
         # Apply lowess smoothing
