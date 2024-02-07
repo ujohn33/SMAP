@@ -2155,7 +2155,7 @@ def calculate_peak_metrics(df):
     ])
 
     # Function to calculate peak metrics for each group
-    def calc_peaks(args: List[pl.Series]):
+    def peak_metrics(args: List[pl.Series]):
         if args[0].is_null().any():
             return [(pl.Null, pl.Null)]
         # Identify peaks
@@ -2177,7 +2177,7 @@ def calculate_peak_metrics(df):
         return N_peaks, mean_d_peaks
 
     # Apply the peak calculation function to each week
-    result_df = df.group_by(["year", "week"]).agg(pl.apply([pl.col('cons')],calc_peaks).alias('result'))
+    result_df = df.group_by(["year", "week"]).agg(pl.apply([pl.col('cons')],peak_metrics).alias('result'))
     result_df = result_df.with_columns(
         result_df['result'].list.get(0).alias('t_wide_peaks'),
         result_df['result'].list.get(1).alias('t_width_peaks'),
