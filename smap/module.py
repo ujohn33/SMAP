@@ -2157,7 +2157,7 @@ def t_wide_peaks(df):
     # Function to calculate peak metrics for each group
     def number_wide_peaks(args: List[pl.Series]):
         if args[0].is_null().any():
-            return np.nan
+            return None
         # Identify peaks
         max_val = args[0].max()
         peaks = args[0] > (0.5 * max_val)
@@ -2191,7 +2191,7 @@ def t_width_peaks(df):
     # Function to calculate peak metrics for each group
     def width_peaks(args: List[pl.Series]):
         if args[0].is_null().any():
-            return np.nan
+            return None
         # Identify peaks
         max_val = args[0].max()
         peaks = args[0] > (0.5 * max_val)
