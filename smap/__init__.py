@@ -92,7 +92,8 @@ from .module import (
     ts_stl_varRem,
     ts_acf_mean3h,
     ts_acf_mean3h_weekday,
-    calculate_peak_metrics
+    t_wide_peaks,
+    t_width_peaks
 )
 
 __all__ = [
@@ -188,5 +189,7 @@ __all__ = [
     "ts_stl_varRem",
     "ts_acf_mean3h",
     "ts_acf_mean3h_weekday",
-    "calculate_peak_metrics"
+    "calculate_peak_metrics",
+    "t_wide_peaks",
+    "t_width_peaks"
 ]
