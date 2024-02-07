@@ -1790,10 +1790,11 @@ def w_temp_cor_overall(df, weather_col='temp'):
 
 # Function to apply to each group for linear regression
 def calc_linear_relationship(args: List[pl.Series]):
+    if args[0].is_null().any() or args[1].is_null().any():
+        return None
     # Prepare data for linear regression
     X = sm.add_constant(args[0].to_numpy())  # Independent variable (temperature)
     y = args[1].to_numpy()  # Dependent variable (consumption)
-
     # Fit linear regression model and extract the coefficient
     model = sm.OLS(y, X, missing='drop').fit()
     return model.params[1]  # Return the slope coefficient
@@ -2087,7 +2088,7 @@ def ts_stl_varRem(df):
     # Apply STL decomposition and calculate variance, but output NaN if missing values are present
     def calc_stl_variance(args: List[pl.Series]):
         if args[0].is_null().any():
-            return np.nan
+            return None
         ts_data = args[0].to_numpy()
         stl = STL(ts_data, period=52)  # Adjust period as needed
         result = stl.fit()
@@ -2109,7 +2110,7 @@ def ts_acf_mean3h(df):
     def calc_autocorrelation(args: List[pl.Series]):
         # Check for missing values
         if args[0].is_null().any():
-            return np.nan
+            return None
         # Calculate autocorrelation with lag up to 12
         autocorr_values = acf(args[0].to_numpy(), nlags=12, fft=True, missing='conservative')
         # Compute the mean of the autocorrelation values (excluding the first value at lag=0)
@@ -2135,7 +2136,7 @@ def ts_acf_mean3h_weekday(df):
     def calc_autocorrelation(args: List[pl.Series]):
         # Check for missing values
         if args[0].is_null().any():
-            return np.nan
+            return None
         # Calculate autocorrelation with lag up to 12
         autocorr_values = acf(args[0].to_numpy(), nlags=12, fft=True, missing='conservative')
         # Compute the mean of the autocorrelation values (excluding the first value at lag=0)
