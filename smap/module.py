@@ -2147,7 +2147,7 @@ def ts_acf_mean3h_weekday(df):
     return result_df
 
 
-def calculate_peak_metrics(df):
+def t_wide_peaks(df):
     # Add columns for the year and week
     df = df.with_columns([
         pl.col('dt').dt.year().alias("year"),
@@ -2155,9 +2155,9 @@ def calculate_peak_metrics(df):
     ])
 
     # Function to calculate peak metrics for each group
-    def peak_metrics(args: List[pl.Series]):
+    def number_wide_peaks(args: List[pl.Series]):
         if args[0].is_null().any():
-            return [(pl.Null, pl.Null)]
+            return np.nan
         # Identify peaks
         max_val = args[0].max()
         peaks = args[0] > (0.5 * max_val)
@@ -2173,13 +2173,42 @@ def calculate_peak_metrics(df):
             lv = i
         # Calculate metrics
         N_peaks = sum(d_peaks)
-        mean_d_peaks = np.mean(d_peaks)
-        return N_peaks, mean_d_peaks
+        #mean_d_peaks = np.mean(d_peaks)
+        return N_peaks
 
-    # Apply the peak calculation function to each week
-    result_df = df.group_by(["year", "week"]).agg(pl.apply([pl.col('cons')],peak_metrics).alias('result'))
-    result_df = result_df.with_columns(
-        result_df['result'].list.get(0).alias('t_wide_peaks'),
-        result_df['result'].list.get(1).alias('t_width_peaks'),
-    )
-    return result_df.drop('result')
+    # Group by year and week and apply the autocorrelation function
+    result_df = df.group_by(["year", "week"]).agg(pl.apply([pl.col('cons')],number_wide_peaks).alias("t_wide_peaks"))
+    return result_df
+
+
+def t_width_peaks(df):
+    # Add columns for the year and week
+    df = df.with_columns([
+        pl.col('dt').dt.year().alias("year"),
+        pl.col('dt').dt.week().alias("week")
+    ])
+
+    # Function to calculate peak metrics for each group
+    def width_peaks(args: List[pl.Series]):
+        if args[0].is_null().any():
+            return np.nan
+        # Identify peaks
+        max_val = args[0].max()
+        peaks = args[0] > (0.5 * max_val)
+        # Find non-peaks and calculate peak widths
+        non_peaks = [i for i, val in enumerate(peaks, start=1) if not val]
+        non_peaks.append(len(peaks) + 1)  # Append a sentinel value
+        lv = 0
+        d_peaks = [2]  # Initialize with 2 as in the R code
+        for i in non_peaks:
+            temp = sum(peaks[lv:i])
+            if temp > 1:
+                d_peaks.append(temp)
+            lv = i
+        # Calculate metrics
+        mean_d_peaks = np.mean(d_peaks)
+        return mean_d_peaks
+
+    # Group by year and week and apply the autocorrelation function
+    result_df = df.group_by(["year", "week"]).agg(pl.apply([pl.col('cons')],width_peaks).alias("t_width_peaks"))
+    return result_df
