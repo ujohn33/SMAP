@@ -1895,6 +1895,8 @@ def w_temp_cor_maxima(df):
 
     # Group by year and week and calculate linear relationship between daily minimums
     def calc_linear_relationship_maxima(args: List[pl.Series]):
+        if args[0].is_null().any() or args[1].is_null().any():
+            return None
         X = sm.add_constant(args[0].to_numpy())  # Independent variable (temperature)
         y = args[1].to_numpy()  # Dependent variable (consumption)
         # Fit linear regression model and extract the coefficient
@@ -1921,6 +1923,8 @@ def w_temp_cor_maxmin(df):
 
     # Group by year and week and calculate linear relationship between daily minimums
     def calc_linear_relationship_maxmin(args: List[pl.Series]):
+        if args[0].is_null().any() or args[1].is_null().any():
+            return None
         X = sm.add_constant(args[0].to_numpy())  # Independent variable (temperature)
         y = args[1].to_numpy()  # Dependent variable (consumption)
         # Fit linear regression model and extract the coefficient
