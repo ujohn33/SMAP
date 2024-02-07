@@ -1362,8 +1362,7 @@ def s_sm_variety(df):
     # Calculate the difference in 'cons' and then the 20%-quintile for each group
     df_variety = df.group_by(["year", "week"]).agg(
         [
-            pl.col('cons').diff().abs().alias('sm_variety'),
-            #pl.col('sm_variety').quantile(0.20).alias('20pct_sm_variety')
+            pl.col('cons').diff().abs().quantile(0.20).alias('s_bg_variety'),
         ]
     )
     return df_variety
@@ -1379,7 +1378,7 @@ def s_bg_variety(df):
     # Calculate the difference in 'cons' and then the 20%-quintile for each group
     df_variety = df.group_by(["year", "week"]).agg(
         [
-            pl.col('cons').diff().abs().quantile(0.60).alias('20pct_sm_variety')
+            pl.col('cons').diff().abs().quantile(0.60).alias('s_bg_variety')
         ]
     )
     return df_variety
