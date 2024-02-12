@@ -1799,15 +1799,15 @@ def calc_linear_relationship(args: List[pl.Series]):
     return model.params[1]  # Return the slope coefficient
 
 
-def w_temp_cor_daily(df):
-    # Add columns for the year and week
-    df = df.with_columns([
-        pl.col('dt').dt.year().alias("year"),
-        pl.col('dt').dt.week().alias("week")
-    ])
-    # Group by year and week and apply the linear regression function
-    result_df = df.group_by(["year", "week"]).agg(pl.apply(exprs=["temp", "cons"], function=calc_linear_relationship).alias('temp_cons_cor_daily'))
-    return result_df
+# def w_temp_cor_daily(df):
+#     # Add columns for the year and week
+#     df = df.with_columns([
+#         pl.col('dt').dt.year().alias("year"),
+#         pl.col('dt').dt.week().alias("week")
+#     ])
+#     # Group by year and week and apply the linear regression function
+#     result_df = df.group_by(["year", "week"]).agg(pl.apply(exprs=["temp", "cons"], function=calc_linear_relationship).alias('temp_cons_cor_daily'))
+#     return result_df
 
 
 def w_temp_cor_night(df):
