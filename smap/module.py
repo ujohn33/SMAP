@@ -1796,6 +1796,8 @@ def calc_linear_relationship(args: List[pl.Series]):
     y = args[1].to_numpy()  # Dependent variable (consumption)
     # Fit linear regression model and extract the coefficient
     model = sm.OLS(y, X, missing='drop').fit()
+    if len(model.params) < 2:
+        return None
     return model.params[1]  # Return the slope coefficient
 
 
@@ -1811,6 +1813,10 @@ def calc_linear_relationship(args: List[pl.Series]):
 
 
 def w_temp_cor_night(df):
+    df = df.set_sorted('dt').group_by_dynamic('dt', every='1h', period='15m', closed='left').agg(
+        pl.col('cons').sum().alias('cons'),
+        pl.col('temp').first()
+    )
     # add columns for the year, week, and hour
     df = df.with_columns([
         pl.col('dt').dt.year().alias("year"),
@@ -1825,6 +1831,10 @@ def w_temp_cor_night(df):
 
 
 def w_temp_cor_daytime(df):
+    df = df.set_sorted('dt').group_by_dynamic('dt', every='1h', period='15m', closed='left').agg(
+        pl.col('cons').sum().alias('cons'),
+        pl.col('temp').first()
+    )
     # Add columns for the year, week, day, and hour
     df = df.with_columns([
         pl.col('dt').dt.year().alias("year"),
@@ -1840,6 +1850,10 @@ def w_temp_cor_daytime(df):
 
 
 def w_temp_cor_evening(df):
+    df = df.set_sorted('dt').group_by_dynamic('dt', every='1h', period='15m', closed='left').agg(
+        pl.col('cons').sum().alias('cons'),
+        pl.col('temp').first()
+    )
     # Add columns for the year, week, day, and hour
     df = df.with_columns([
         pl.col('dt').dt.year().alias("year"),
@@ -1854,6 +1868,10 @@ def w_temp_cor_evening(df):
     
 
 def w_temp_cor_minima(df):
+    df = df.set_sorted('dt').group_by_dynamic('dt', every='1h', period='15m', closed='left').agg(
+        pl.col('cons').sum().alias('cons'),
+        pl.col('temp').first()
+    )
     # Add columns for the year, week, and day
     df = df.with_columns([
         pl.col('dt').dt.year().alias("year"),
@@ -1874,6 +1892,8 @@ def w_temp_cor_minima(df):
         y = args[1].to_numpy()  # Dependent variable (consumption)
         # Fit linear regression model and extract the coefficient
         model = sm.OLS(y, X, missing='drop').fit()
+        if len(model.params) < 2:
+            return None
         return model.params[1]  # Return the slope coefficient
     
     # Apply the linear regression function to each group
@@ -1882,6 +1902,10 @@ def w_temp_cor_minima(df):
 
 
 def w_temp_cor_maxima(df):
+    df = df.set_sorted('dt').group_by_dynamic('dt', every='1h', period='15m', closed='left').agg(
+        pl.col('cons').sum().alias('cons'),
+        pl.col('temp').first()
+    )
     # Add columns for the year, week, and day
     df = df.with_columns([
         pl.col('dt').dt.year().alias("year"),
@@ -1902,6 +1926,8 @@ def w_temp_cor_maxima(df):
         y = args[1].to_numpy()  # Dependent variable (consumption)
         # Fit linear regression model and extract the coefficient
         model = sm.OLS(y, X, missing='drop').fit()
+        if len(model.params) < 2:
+            return None
         return model.params[1]  # Return the slope coefficient
     
     # Apply the linear regression function to each group
@@ -1910,6 +1936,10 @@ def w_temp_cor_maxima(df):
 
 
 def w_temp_cor_maxmin(df):
+    df = df.set_sorted('dt').group_by_dynamic('dt', every='1h', period='15m', closed='left').agg(
+        pl.col('cons').sum().alias('cons'),
+        pl.col('temp').first()
+    )
     # Add columns for the year, week, and day
     df = df.with_columns([
         pl.col('dt').dt.year().alias("year"),
@@ -1930,6 +1960,8 @@ def w_temp_cor_maxmin(df):
         y = args[1].to_numpy()  # Dependent variable (consumption)
         # Fit linear regression model and extract the coefficient
         model = sm.OLS(y, X, missing='drop').fit()
+        if len(model.params) < 2:
+            return None
         return model.params[1]  # Return the slope coefficient
     
     # Apply the linear regression function to each group
@@ -1938,6 +1970,10 @@ def w_temp_cor_maxmin(df):
 
 
 def w_temp_cor_weekday_weekend(df):
+    df = df.set_sorted('dt').group_by_dynamic('dt', every='1h', period='15m', closed='left').agg(
+        pl.col('cons').sum().alias('cons'),
+        pl.col('temp').first()
+    )
     # Add columns for the year, week, and weekday/weekend
     df = df.with_columns([
         pl.col('dt').dt.year().alias("year"),
