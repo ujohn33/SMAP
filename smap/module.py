@@ -1362,7 +1362,7 @@ def s_sm_variety(df):
     # Calculate the difference in 'cons' and then the 20%-quintile for each group
     df_variety = df.group_by(["year", "week"]).agg(
         [
-            pl.col('cons').diff().abs().quantile(0.20).alias('s_bg_variety'),
+            pl.col('cons').diff().abs().quantile(0.20).alias('s_sm_variety'),
         ]
     )
     return df_variety
@@ -1806,7 +1806,7 @@ def w_temp_cor_daily(df):
         pl.col('dt').dt.week().alias("week")
     ])
     # Group by year and week and apply the linear regression function
-    result_df = df.group_by(["year", "week"]).agg(pl.apply(exprs=["temp", "cons"], function=calc_linear_relationship).alias('temp_cons_cor'))
+    result_df = df.group_by(["year", "week"]).agg(pl.apply(exprs=["temp", "cons"], function=calc_linear_relationship).alias('temp_cons_cor_daily'))
     return result_df
 
 
@@ -1994,7 +1994,7 @@ def t_above_2kw(df):
         pl.min('hour').alias('daily_t_above_1kW_hour')
     )
     first_exceeding_df = hourly_avg_df.group_by(['year', 'week']).agg(
-        pl.mean('daily_t_above_1kW_hour').alias('first_exceeding_1kW_hour')
+        pl.mean('daily_t_above_1kW_hour').alias('first_exceeding_2kW_hour')
     )
     return first_exceeding_df
 
