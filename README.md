@@ -1,19 +1,20 @@
 
 # SMAP Library
 
-SMAP is a Python library for smart meter analysis of consumption and temperature time-series data. It is a recreation of an R package, designed to provide similar functionality in Python.
+SMAP is a Python library for smart meter analysis of consumption and temperature time-series data. It's designed as a Python implementation of the R package [SmartMeterAnalytics](https://cran.r-project.org/web/packages/SmartMeterAnalytics/index.html), providing similar functionality for Python users.
 
 ## Features
 
-SMAP provides a range of functions for analyzing time-series data, including:
+Derived from extensive research and machine learning analysis, SMAP uses smart meter and weather data to derive 133 features, enabling recognition of various household characteristics with high accuracy. These features facilitate detailed analyses and interventions for energy efficiency improvements. Here are some key functionalities:
 
-- Calculating weekly average consumption
-- Calculating evening consumption minus the minimum consumption
-- Calculating peak metrics for each group
+- Weekly average consumption calculations.
+- Evening minus minimum consumption calculations.
+- Peak metrics calculation for each group.
+- Predicting household characteristics with high accuracy, including the type of water and space heating, the age of appliances, and the presence of photovoltaic systems.
 
 ## Installation
 
-You can install SMAP using pip:
+Install SMAP via pip:
 
 ```bash
 pip install SMAP
@@ -23,7 +24,7 @@ SMAP requires Python 3.6 or later and Polars 0.10.0 or later.
 
 ## Usage
 
-To use the functions in SMAP, import the library and call the desired function with the appropriate parameters. For example:
+Import SMAP and use its functions to analyze smart meter data effectively:
 
 ```python
 import SMAP
@@ -35,7 +36,7 @@ data = {
 }
 df = pl.DataFrame(data)
 
-# Call a function
+# Analyze evening consumption
 result = SMAP.c_evening_min(df)
 ```
 
@@ -49,8 +50,9 @@ SMAP is licensed under the terms of the MIT license.
 
 ## Contact
 
-If you have any questions or feedback, please contact the author:
+For any questions or feedback, please contact:
 
 Evgenii Genov  
 eugengenov@gmail.com  
-For more information, please visit the SMAP GitHub repository.
+
+Visit the SMAP [GitHub repository](https://github.com/your-repo/smap) for more information.
