@@ -142,5 +142,5 @@ SMAP is licensed under the terms of the MIT license.
 For any questions or feedback, please contact:
 
 Evgenii Genov  
-eugengenov@gmail.com  
+evgenii.genov@vub.be
 
