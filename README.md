@@ -114,6 +114,7 @@ Import SMAP and use its functions to analyze smart meter data effectively:
 
 ```python
 import SMAP
+import polars as pl
 
 # Create a DataFrame
 data = {
@@ -128,7 +129,7 @@ result = SMAP.c_evening_min(df)
 
 ## Contributing
 
-Contributions are welcome! Please read the contributing guidelines before making any changes.
+Contributions are welcome! 
 
 ## References
 1. Konstantin Hopf et al. (2016). "Predictive Analytics for Energy Efficiency and Energy Retailing." DOI: [10.20378/irbo-54833](https://doi.org/10.20378/irbo-54833).
