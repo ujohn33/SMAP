@@ -1,5 +1,5 @@
 
-# Smart Meter Analytics Python Library
+# Smart Meter Analytics Python 
 
 SMAP (Smart Meter Analytics Python) is a Python library for smart meter analysis of consumption and temperature time-series data. It's designed as a Python implementation of the R package [SmartMeterAnalytics](https://cran.r-project.org/web/packages/SmartMeterAnalytics/index.html), providing similar functionality for Python users. SMAP is built using Polars, a dataframe library, optimized for high speed performance on scale. 
 
@@ -58,6 +58,45 @@ Derived from extensive research and machine learning analysis, SMAP uses smart m
 | `r_noon_wd_we`         | Ratio between noon weekday and weekend consumption.              |
 | `r_morning_wd_we`      | Ratio between morning weekday and weekend consumption.           |
 | `r_afternoon_wd_we`    | Ratio between afternoon weekday and weekend consumption.         |
+| `s_sm_variety`     | Calculates the 20%-quintile of absolute differences in consumption (`cons`) per week and year. |
+| `s_bg_variety`     | Calculates the 60%-quintile of absolute differences in consumption (`cons`) per week and year. |
+| `s_day_diff`       | Computes the mean of absolute differences in daily consumption during weekdays, grouped by year and week. |
+| `s_variance`       | Computes the variance of consumption (`cons`) grouped by year and week. |
+| `s_var_wd`         | Computes the variance of weekday consumption grouped by year and week. |
+| `s_var_we`         | Computes the variance of weekend consumption grouped by year and week. |
+| `s_diff`           | Computes the total absolute difference in consumption for each year and week. |
+| `s_cor`            | Computes the correlations between daily consumption patterns across different weekdays within a week. |
+| `s_num_peaks`      | Identifies and counts the number of peaks in consumption data per week. |
+| `s_q1`             | Calculates the first quartile (Q1) of consumption data for each week. |
+| `s_q2`             | Calculates the median (Q2) of consumption data for each week. |
+| `s_q3`             | Calculates the third quartile (Q3) of consumption data for each week. |
+| `c_max_avg`        | Calculates the average of daily maximum consumption values per week. |
+| `c_min_avg`        | Calculates the average of daily minimum consumption values per week. |
+| `s_number_zeros`   | Counts the number of zero consumption readings per week. |
+| `s_cor_wd`         | Computes average correlations between weekdays' consumption. |
+| `s_cor_we`         | Computes correlations between Saturday and Sunday consumption. |
+| `s_cor_wd_we`      | Computes correlations between average weekday and weekend consumption. |
+| `s_number_small_peaks` | Identifies and counts smaller peaks in consumption within a week. |
+| `s_number_big_peaks`   | Identifies and counts larger peaks in consumption within a week. |
+| `w_temp_cor_overall`   | Computes the correlation between temperature and consumption on a weekly basis. |
+| `w_temp_cor_night`     | Calculates correlation between night-time temperature and consumption for each week. |
+| `w_temp_cor_daytime`   | Calculates correlation between daytime temperature and consumption during weekdays. |
+| `w_temp_cor_evening`   | Calculates correlation between evening temperature and consumption during weekdays. |
+| `w_temp_cor_minima`    | Analyzes the relationship between daily minimum temperatures and minimum consumption. |
+| `w_temp_cor_maxima`    | Analyzes the relationship between daily maximum temperatures and maximum consumption. |
+| `w_temp_cor_maxmin`    | Analyzes the relationship between daily minimum temperatures and maximum consumption. |
+| `w_temp_cor_weekday_weekend` | Calculates the ratio of differences between weekday and weekend average temperatures and consumptions. |
+| `t_above_1kw`      | Determines the first hour of the day where consumption exceeds 1 kW on weekdays. |
+| `t_above_2kw`      | Determines the first hour of the day where consumption exceeds 2 kW on weekdays. |
+| `t_above_mean`     | Identifies the first time each day that consumption exceeds the weekly mean. |
+| `t_daily_max`      | Determines the time of day when daily maximum consumption occurs. |
+| `t_daily_min`      | Determines the time of day when daily minimum consumption occurs. |
+| `ts_stl_varRem`    | Applies STL decomposition and computes the variance of the remainder component. |
+| `ts_acf_mean3h`    | Computes the mean autocorrelation of consumption data at 3-hour intervals. |
+| `ts_acf_mean3h_weekday` | Computes the mean autocorrelation of weekday consumption data at 3-hour intervals. |
+| `t_wide_peaks`     | Calculates the number of wide peaks in consumption data. |
+| `t_width_peaks`    | Calculates the average width of peaks in consumption data. |
+
 
 ## Installation
 
