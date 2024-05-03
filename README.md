@@ -131,6 +131,9 @@ result = SMAP.c_evening_min(df)
 Contributions are welcome! Please read the contributing guidelines before making any changes.
 
 ## References
+1. Konstantin Hopf et al. (2016). "Predictive Analytics for Energy Efficiency and Energy Retailing." DOI: [10.20378/irbo-54833](https://doi.org/10.20378/irbo-54833).
+
+2. Konstantin Hopf et al. (2018). "Enhancing energy efficiency in the residential sector with smart meter data analytics." Energy, vol. 28, pp. 453-473. DOI: [10.1007/s12525-018-0290-9](https://doi.org/10.1007/s12525-018-0290-9).
 
 
 ## License
