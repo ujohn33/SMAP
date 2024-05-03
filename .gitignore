@@ -1,2 +1,5 @@
 .DS_Store
 .vscode
+*.pyc
+*.pyo
+smap/__pycache__
