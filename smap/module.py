@@ -1635,9 +1635,15 @@ def s_cor_wd(df):
         columns='weekday',
         values='cons'
     ).fill_null(pl.lit(0))  # Fill missing values
-    # Rename columns for clarity
-    day_cols = [f'cons_weekday{i}' for i in range(7)]
-    pivot_df.columns = ['year', 'week', 'time'] + day_cols
+    # Add missing weekday columns if necessary
+    for i in range(7):
+        col_name = f'cons_weekday{i}'
+        if col_name not in pivot_df.columns:
+            pivot_df = pivot_df.with_columns(pl.lit(0).alias(col_name))
+
+    # Ensure the columns are in the correct order
+    ordered_columns = ['year', 'week', 'time'] + [f'cons_weekday{i}' for i in range(7)]
+    pivot_df = pivot_df.select(ordered_columns)
     # Compute correlations for each pair of days
     correlations = []
     correlation_cols = []
@@ -1670,9 +1676,15 @@ def s_cor_we(df):
         columns='weekday',
         values='cons'
     ).fill_null(pl.lit(0))  # Fill missing values
-    # Rename columns for clarity
-    day_cols = [f'cons_weekday{i}' for i in range(7)]
-    pivot_df.columns = ['year', 'week', 'time'] + day_cols
+    # Add missing weekday columns if necessary
+    for i in range(7):
+        col_name = f'cons_weekday{i}'
+        if col_name not in pivot_df.columns:
+            pivot_df = pivot_df.with_columns(pl.lit(0).alias(col_name))
+
+    # Ensure the columns are in the correct order
+    ordered_columns = ['year', 'week', 'time'] + [f'cons_weekday{i}' for i in range(7)]
+    pivot_df = pivot_df.select(ordered_columns)
     # Compute correlations for each pair of days
     correlations = []
     correlation_cols = []
