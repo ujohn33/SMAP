@@ -2144,7 +2144,10 @@ def ts_stl_varRem(df):
 
     result_df = df.group_by(["year", "week"]).agg(pl.apply([pl.col('cons')],calc_stl_variance).alias("mean_residual_stl"))
     # if the column is list[i64], we use expr.list.first() to get the first element of the list
-    result_df = result_df.with_columns(pl.col("mean_residual_stl").list.first())
+    if result_df['mean_residual_stl'].dtype == pl.List:
+        result_df = result_df.with_columns(pl.col("mean_residual_stl").list.first())
+    else:
+        pass
     return result_df
 
 
@@ -2169,7 +2172,10 @@ def ts_acf_mean3h(df):
     # Group by year and week and apply the autocorrelation function
     result_df = df.group_by(["year", "week"]).agg(pl.apply([pl.col('cons')],calc_autocorrelation).alias("mean_autocorrelation"))
     # if the column is list[i64], we use expr.list.first() to get the first element of the list
-    result_df = result_df.with_columns(pl.col("mean_autocorrelation").list.first())
+    if result_df['mean_autocorrelation'].dtype == pl.List:
+        result_df = result_df.with_columns(pl.col("mean_autocorrelation").list.first())
+    else:
+        pass
     return result_df
 
 
@@ -2231,7 +2237,10 @@ def t_wide_peaks(df):
     # Group by year and week and apply the autocorrelation function
     result_df = df.group_by(["year", "week"]).agg(pl.apply(pl.col('cons'),number_wide_peaks).alias("t_wide_peaks"))
     # if the column is list[i64], we use expr.list.first() to get the first element of the list
-    result_df = result_df.with_columns(pl.col("t_wide_peaks").list.first())
+    if result_df['t_wide_peaks'].dtype == pl.List:
+        result_df = result_df.with_columns(pl.col("t_wide_peaks").list.first())
+    else:
+        pass
     return result_df
 
 
@@ -2266,5 +2275,8 @@ def t_width_peaks(df):
     # Group by year and week and apply the autocorrelation function
     result_df = df.group_by(["year", "week"]).agg(pl.apply(pl.col('cons'),width_peaks).alias("t_width_peaks"))
     # if the column is list[i64], we use expr.list.first() to get the first element of the list
-    result_df = result_df.with_columns(pl.col("t_width_peaks").list.first())
+    if result_df['t_width_peaks'].dtype == pl.List:
+        result_df = result_df.with_columns(pl.col("t_width_peaks").list.first())
+    else:
+        pass
     return result_df
