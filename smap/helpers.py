@@ -54,7 +54,4 @@ def calc_features30_consumption(df):
     acf_mean3h = ts_acf_mean3h(df)
     features = features.join(stl_var_rem, how='outer', left_on=['year', 'week'], right_on=['year', 'week'])
     features = features.join(acf_mean3h, how='outer', left_on=['year', 'week'], right_on=['year', 'week'])
-
-    # if the column is list[i64], we use expr.list.first() to get the first element of the list
-    #features = features
     return features
