@@ -1478,9 +1478,15 @@ def s_cor(df):
         columns='weekday',
         values='cons'
     ).fill_null(pl.lit(0))  # Fill missing values
-    # Rename columns for clarity
-    day_cols = [f'cons_weekday{i}' for i in range(7)]
-    pivot_df.columns = ['year', 'week', 'time'] + day_cols
+    # Add missing weekday columns if necessary
+    for i in range(7):
+        col_name = f'cons_weekday{i}'
+        if col_name not in pivot_df.columns:
+            pivot_df = pivot_df.with_columns(pl.lit(0).alias(col_name))
+
+    # Ensure the columns are in the correct order
+    ordered_columns = ['year', 'week', 'time'] + [f'cons_weekday{i}' for i in range(7)]
+    pivot_df = pivot_df.select(ordered_columns)
     # Compute correlations for each pair of days
     correlations = []
     correlation_cols = []
@@ -2137,6 +2143,8 @@ def ts_stl_varRem(df):
         return np.var(remainder)
 
     result_df = df.group_by(["year", "week"]).agg(pl.apply([pl.col('cons')],calc_stl_variance).alias("mean_residual_stl"))
+    # if the column is list[i64], we use expr.list.first() to get the first element of the list
+    result_df = result_df.with_columns(pl.col("mean_residual_stl").list.first())
     return result_df
 
 
@@ -2160,6 +2168,8 @@ def ts_acf_mean3h(df):
 
     # Group by year and week and apply the autocorrelation function
     result_df = df.group_by(["year", "week"]).agg(pl.apply([pl.col('cons')],calc_autocorrelation).alias("mean_autocorrelation"))
+    # if the column is list[i64], we use expr.list.first() to get the first element of the list
+    result_df = result_df.with_columns(pl.col("mean_autocorrelation").list.first())
     return result_df
 
 
@@ -2219,7 +2229,9 @@ def t_wide_peaks(df):
         return N_peaks
 
     # Group by year and week and apply the autocorrelation function
-    result_df = df.group_by(["year", "week"]).agg(pl.apply([pl.col('cons')],number_wide_peaks).alias("t_wide_peaks"))
+    result_df = df.group_by(["year", "week"]).agg(pl.apply(pl.col('cons'),number_wide_peaks).alias("t_wide_peaks"))
+    # if the column is list[i64], we use expr.list.first() to get the first element of the list
+    result_df = result_df.with_columns(pl.col("t_wide_peaks").list.first())
     return result_df
 
 
@@ -2252,5 +2264,7 @@ def t_width_peaks(df):
         return mean_d_peaks
 
     # Group by year and week and apply the autocorrelation function
-    result_df = df.group_by(["year", "week"]).agg(pl.apply([pl.col('cons')],width_peaks).alias("t_width_peaks"))
+    result_df = df.group_by(["year", "week"]).agg(pl.apply(pl.col('cons'),width_peaks).alias("t_width_peaks"))
+    # if the column is list[i64], we use expr.list.first() to get the first element of the list
+    result_df = result_df.with_columns(pl.col("t_width_peaks").list.first())
     return result_df

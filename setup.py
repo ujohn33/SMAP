@@ -12,6 +12,7 @@ setup(
     packages=find_packages(exclude=('tests', 'docs')),
     install_requires=[
         'polars>=0.10.0'  # Replace with the version of Polars you are using or compatible with
+
     ],
     classifiers=[
         # Trove classifiers
