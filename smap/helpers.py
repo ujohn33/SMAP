@@ -1,7 +1,7 @@
 import polars as pl
 from smap import * 
 
-def calc_features30_consumption(df):
+def calc_features_consumption(df):
     # Initial feature calculations
     features = pl.DataFrame()
     
