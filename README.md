@@ -122,7 +122,9 @@ data = {
     'cons': [15, 25, 35, 45]
 }
 df = pl.DataFrame(data)
-
+df = df.with_columns(
+    pl.col("dt").str.to_datetime("%Y-%m-%d %H:%M"),
+)
 # Analyze evening consumption
 result = SMAP.c_evening_min(df)
 ```
