@@ -8,11 +8,12 @@ def calc_features_consumption(df):
         pl.col('dt').dt.week().alias("week")
     ])
 
-    # Calculate basic features
-    avg_weekly = c_week(df)
-    max_weekly = s_max(df)
-    min_weekly = s_min(df)
+    # Calculate basic weekly consumption statistics
+    avg_weekly = c_week(df)  # Calculate average consumption per week
+    max_weekly = s_max(df)   # Calculate maximum consumption per week
+    min_weekly = s_min(df)   # Calculate minimum consumption per week
 
+    # Calculate ratios and other derived features for further analysis
     ratio_mean_max = r_mean_max(df)
     ratio_min_mean = r_min_mean(df)
     ratio_night_mean = r_night_mean(df)

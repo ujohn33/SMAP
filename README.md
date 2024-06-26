@@ -100,10 +100,12 @@ Derived from extensive research and machine learning analysis, SMAP uses smart m
 
 ## Installation
 
-Install SMAP via pip:
+Install SMAP after importing this github libary:
 
 ```bash
-pip install SMAP
+git clone git@github.com:ujohn33/SMAP.git
+# in the directory of the repository
+pip install .
 ```
 
 SMAP requires Python 3.6 or later and Polars 0.10.0 or later.
