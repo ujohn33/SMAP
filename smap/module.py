@@ -673,7 +673,7 @@ def c_week_no_min(df):
     # get the minimum weekly consumption
     weekly_min = s_min(df)
     # outer join the weekly_avg and weekly_min DataFrames on the year and week columns
-    weekly_avg = weekly_avg.join(weekly_min, on=['year', 'week'], how='outer')
+    weekly_avg = weekly_avg.join(weekly_min, on=['year', 'week'], how="full", coalesce=True)
     # subtract the minimum from the average_cons column of weekly_avg and rename to average_cons_min
     weekly_avg = weekly_avg.with_columns(
         (pl.col('average_cons') - pl.col('min_cons')).alias('cons_week_no_min')
@@ -724,7 +724,7 @@ def c_evening_no_min(df):
     # get the minimum in the cons column of df 
     evening_min = s_min(df)
     # outer join the weekly_max and weekly_min DataFrames on the year and week columns
-    evening_avg = evening_avg.join(evening_min, on=['year', 'week'], how='outer')
+    evening_avg = evening_avg.join(evening_min, on=['year', 'week'], how="full", coalesce=True)
     # subtract the minimum from the average_cons_evening column of evening_avg and rename to average_cons_evening_min
     evening_avg = evening_avg.with_columns( 
         (pl.col('average_cons_evening') - pl.col('min_cons')).alias('cons_evening_no_min')
@@ -749,7 +749,7 @@ def c_morning_no_min(df):
     # get the minimum in the cons column of df 
     morning_min = s_min(df)
     # outer join the weekly_max and weekly_min DataFrames on the year and week columns
-    morning_avg = morning_avg.join(morning_min, on=['year', 'week'], how='outer')
+    morning_avg = morning_avg.join(morning_min, on=['year', 'week'], how="full", coalesce=True)
     # subtract the minimum from the average_cons_morning column of morning_avg and rename to average_cons_morning_min
     morning_avg = morning_avg.with_columns(
         (pl.col('average_cons_morning') - pl.col('min_cons')).alias('cons_morning_no_min')
@@ -774,7 +774,7 @@ def c_noon_no_min(df):
     # get the minimum in the cons column of df 
     noon_min = s_min(df)
     # outer join the weekly_max and weekly_min DataFrames on the year and week columns
-    noon_avg = noon_avg.join(noon_min, on=['year', 'week'], how='outer')
+    noon_avg = noon_avg.join(noon_min, on=['year', 'week'], how="full", coalesce=True)
     # subtract the minimum from the average_cons_noon column of noon_avg and rename to average_cons_noon_min
     noon_avg = noon_avg.with_columns(
         (pl.col('average_cons_noon') - pl.col('min_cons')).alias('cons_noon_no_min')
@@ -799,7 +799,7 @@ def c_night_no_min(df):
     # get the minimum in the cons column of df 
     night_min = s_min(df)
     # outer join the weekly_max and weekly_min DataFrames on the year and week columns
-    night_avg = night_avg.join(night_min, on=['year', 'week'], how='outer')
+    night_avg = night_avg.join(night_min, on=['year', 'week'], how="full", coalesce=True)
     # subtract the minimum from the average_cons_night column of night_avg and rename to average_cons_night_min
     night_avg = night_avg.with_columns(
         (pl.col('average_cons_night') - pl.col('min_cons')).alias('cons_night_no_min')
@@ -825,7 +825,7 @@ def r_mean_max(df):
     # get the maximum consumption 
     weekly_max = s_max(df)
     # outer join the weekly_avg and weekly_max DataFrames on the year and week columns
-    weekly_avg = weekly_avg.join(weekly_max, on=['year', 'week'], how='outer')
+    weekly_avg = weekly_avg.join(weekly_max, on=['year', 'week'], how="full", coalesce=True)
     # divide the weekly average consumption by the maximum consumption and rename to ratio_mean_max
     weekly_avg = weekly_avg.with_columns(
         (pl.col('average_cons') / pl.col('max_cons')).alias('ratio_mean_max')
@@ -851,7 +851,7 @@ def r_min_mean(df):
     # get the minimum consumption 
     weekly_min = s_min(df)
     # outer join the weekly_avg and weekly_min DataFrames on the year and week columns
-    weekly_avg = weekly_avg.join(weekly_min, on=['year', 'week'], how='outer')
+    weekly_avg = weekly_avg.join(weekly_min, on=['year', 'week'], how="full", coalesce=True)
     # divide the minimum consumption by the weekly average consumption and rename to ratio_min_mean
     weekly_avg = weekly_avg.with_columns(
         (pl.col('min_cons') / pl.col('average_cons')).alias('ratio_min_mean')
@@ -877,7 +877,7 @@ def r_night_mean(df):
     # get the night consumption
     night_avg = c_night(df)
     # outer join the weekly_avg and night_avg DataFrames on the year and week columns
-    weekly_avg = weekly_avg.join(night_avg, on=['year', 'week'], how='outer')
+    weekly_avg = weekly_avg.join(night_avg, on=['year', 'week'], how="full", coalesce=True)
     # fill the missing values with 0
     weekly_avg = weekly_avg.fill_null(0)
     # divide the night consumption by the weekly average consumption and rename to ratio_night_mean
@@ -905,7 +905,7 @@ def r_morning_noon(df):
     # get the noon consumption
     noon_avg = c_noon(df)
     # outer join the morning_avg and noon_avg DataFrames on the year and week columns
-    morning_avg = morning_avg.join(noon_avg, on=['year', 'week'], how='outer')
+    morning_avg = morning_avg.join(noon_avg, on=['year', 'week'], how="full", coalesce=True)
     # fill the missing values with 0
     morning_avg = morning_avg.fill_null(0)
     # divide the morning consumption by the noon consumption and rename to ratio_morning_noon
@@ -933,7 +933,7 @@ def r_evening_noon(df):
     # get the noon consumption
     noon_avg = c_noon(df)
     # outer join the evening_avg and noon_avg DataFrames on the year and week columns
-    evening_avg = evening_avg.join(noon_avg, on=['year', 'week'], how='outer')
+    evening_avg = evening_avg.join(noon_avg, on=['year', 'week'], how="full", coalesce=True)
     # fill the missing values with 0
     evening_avg = evening_avg.fill_null(0)
     # divide the evening consumption by the noon consumption and rename to ratio_evening_noon
@@ -963,7 +963,7 @@ def r_mean_max_no_min(df):
     # get the maximum consumption minus the minimum consumption
     weekly_max = s_max_no_min(df)
     # outer join the weekly_avg and weekly_max DataFrames on the year and week columns
-    weekly_avg = weekly_avg.join(weekly_max, on=['year', 'week'], how='outer')
+    weekly_avg = weekly_avg.join(weekly_max, on=['year', 'week'], how="full", coalesce=True)
     # divide the weekly average consumption minus the minimum consumption by the maximum consumption minus the minimum consumption and rename to ratio_mean_max_no_min
     weekly_avg = weekly_avg.with_columns(
         (pl.col('cons_week_no_min') / pl.col('cons_max_no_min')).alias('ratio_mean_max_no_min')
@@ -991,7 +991,7 @@ def r_evening_noon_no_min(df):
     # get the noon consumption minus the minimum consumption
     noon_avg = c_noon_no_min(df)
     # outer join the evening_avg and noon_avg DataFrames on the year and week columns
-    evening_avg = evening_avg.join(noon_avg, on=['year', 'week'], how='outer')
+    evening_avg = evening_avg.join(noon_avg, on=['year', 'week'], how="full", coalesce=True)
     # fill the missing values with 0
     evening_avg = evening_avg.fill_null(0)
     # divide the evening consumption minus the minimum consumption by the noon consumption minus the minimum consumption and rename to ratio_evening_noon_no_min
@@ -1021,7 +1021,7 @@ def r_morning_noon_no_min(df):
     # get the noon consumption minus the minimum consumption
     noon_avg = c_noon_no_min(df)
     # outer join the morning_avg and noon_avg DataFrames on the year and week columns
-    morning_avg = morning_avg.join(noon_avg, on=['year', 'week'], how='outer')
+    morning_avg = morning_avg.join(noon_avg, on=['year', 'week'], how="full", coalesce=True)
     # fill the missing values with 0
     morning_avg = morning_avg.fill_null(0)
     # divide the morning consumption minus the minimum consumption by the noon consumption minus the minimum consumption and rename to ratio_morning_noon_no_min
@@ -1051,7 +1051,7 @@ def r_day_night_no_min(df):
     # get the night consumption minus the minimum consumption
     night_avg = c_night_no_min(df)
     # outer join the day_avg and night_avg DataFrames on the year and week columns
-    day_avg = day_avg.join(night_avg, on=['year', 'week'], how='outer')
+    day_avg = day_avg.join(night_avg, on=['year', 'week'], how="full", coalesce=True)
     # fill the missing values with 0
     day_avg = day_avg.fill_null(0)
     # divide the day consumption minus the minimum consumption by the night consumption minus the minimum consumption and rename to ratio_day_night_no_min
@@ -1079,7 +1079,7 @@ def r_var_wd_we(df):
     # get the weekend consumption
     we_avg = c_var_weekend(df)
     # outer join the wd_avg and we_avg DataFrames on the year and week columns
-    wd_avg = wd_avg.join(we_avg, on=['year', 'week'], how='outer')
+    wd_avg = wd_avg.join(we_avg, on=['year', 'week'], how="full", coalesce=True)
     # divide the working day consumption by the weekend consumption and rename to ratio_var_wd_we
     wd_avg = wd_avg.with_columns(
         (pl.col('var_cons_wd') / pl.col('var_cons_weekend')).alias('ratio_var_wd_we')
@@ -1106,7 +1106,7 @@ def r_min_wd_we(df):
     # get the weekend consumption
     we_min = s_we_min(df)
     # outer join the wd_avg and we_avg DataFrames on the year and week columns
-    wd_min = wd_min.join(we_min, on=['year', 'week'], how='outer')
+    wd_min = wd_min.join(we_min, on=['year', 'week'], how="full", coalesce=True)
     # divide the working day minimum consumption by the weekend minimum
     # consumption and rename to ratio_min_wd_we
     wd_min = wd_min.with_columns(
@@ -1134,7 +1134,7 @@ def r_max_wd_we(df):
     # get the weekend consumption
     we_max = s_we_max(df)
     # outer join the wd_avg and we_avg DataFrames on the year and week columns
-    wd_max = wd_max.join(we_max, on=['year', 'week'], how='outer')
+    wd_max = wd_max.join(we_max, on=['year', 'week'], how="full", coalesce=True)
     # divide the working day maximum consumption by the weekend maximum
     # consumption and rename to ratio_max_wd_we
     wd_max = wd_max.with_columns(
@@ -1162,7 +1162,7 @@ def r_evening_wd_we(df):
     # get the weekend consumption
     we_evening = c_we_evening(df)
     # outer join the wd_avg and we_avg DataFrames on the year and week columns
-    wd_evening = wd_evening.join(we_evening, on=['year', 'week'], how='outer')
+    wd_evening = wd_evening.join(we_evening, on=['year', 'week'], how="full", coalesce=True)
     # divide the working day maximum consumption by the weekend maximum
     # consumption and rename to ratio_max_wd_we
     wd_evening = wd_evening.with_columns(
@@ -1190,7 +1190,7 @@ def r_night_wd_we(df):
     # get the weekend consumption
     we_night = c_we_night(df)
     # outer join the wd_avg and we_avg DataFrames on the year and week columns
-    wd_night = wd_night.join(we_night, on=['year', 'week'], how='outer')
+    wd_night = wd_night.join(we_night, on=['year', 'week'], how="full", coalesce=True)
     # divide the working day maximum consumption by the weekend maximum
     # consumption and rename to ratio_max_wd_we
     wd_night = wd_night.with_columns(
@@ -1218,7 +1218,7 @@ def r_noon_wd_we(df):
     # get the weekend consumption
     we_noon = c_we_noon(df)
     # outer join the wd_avg and we_avg DataFrames on the year and week columns
-    wd_noon = wd_noon.join(we_noon, on=['year', 'week'], how='outer')
+    wd_noon = wd_noon.join(we_noon, on=['year', 'week'], how="full", coalesce=True)
     # divide the working day maximum consumption by the weekend maximum
     # consumption and rename to ratio_max_wd_we
     wd_noon = wd_noon.with_columns(
@@ -1246,7 +1246,7 @@ def r_morning_wd_we(df):
     # get the weekend consumption
     we_morning = c_we_morning(df)
     # outer join the wd_avg and we_avg DataFrames on the year and week columns
-    wd_morning = wd_morning.join(we_morning, on=['year', 'week'], how='outer')
+    wd_morning = wd_morning.join(we_morning, on=['year', 'week'], how="full", coalesce=True)
     # divide the working day maximum consumption by the weekend maximum
     # consumption and rename to ratio_max_wd_we
     wd_morning = wd_morning.with_columns(
@@ -1274,7 +1274,7 @@ def r_afternoon_wd_we(df):
     # get the weekend consumption
     we_afternoon = c_we_afternoon(df)
     # outer join the wd_avg and we_avg DataFrames on the year and week columns
-    wd_afternoon = wd_afternoon.join(we_afternoon, on=['year', 'week'], how='outer')
+    wd_afternoon = wd_afternoon.join(we_afternoon, on=['year', 'week'], how="full", coalesce=True)
     # divide the working day maximum consumption by the weekend maximum
     # consumption and rename to ratio_max_wd_we
     wd_afternoon = wd_afternoon.with_columns(
@@ -1289,7 +1289,7 @@ def r_afternoon_wd_we(df):
 def r_we_night_day(df):
     we_night = c_we_night(df)
     we_weekend = c_weekend(df)
-    we_night = we_night.join(we_weekend, on=['year', 'week'], how='outer')
+    we_night = we_night.join(we_weekend, on=['year', 'week'], how="full", coalesce=True)
     we_night = we_night.with_columns(
         (pl.col('average_cons_we_night') / pl.col('average_cons_weekend')).alias('ratio_we_night_day')
     )
@@ -1301,7 +1301,7 @@ def r_we_night_day(df):
 def r_we_morning_noon(df):
     we_morning = c_we_morning(df)
     we_noon = c_we_noon(df)
-    we_morning = we_morning.join(we_noon, on=['year', 'week'], how='outer')
+    we_morning = we_morning.join(we_noon, on=['year', 'week'], how="full", coalesce=True)
     we_morning = we_morning.with_columns(
         (pl.col('average_cons_we_morning') / pl.col('average_cons_we_noon')).alias('ratio_we_morning_noon')
     )
@@ -1312,7 +1312,7 @@ def r_we_morning_noon(df):
 def r_we_evening_noon(df):
     we_evening = c_we_evening(df)
     we_noon = c_we_noon(df)
-    we_evening = we_evening.join(we_noon, on=['year', 'week'], how='outer')
+    we_evening = we_evening.join(we_noon, on=['year', 'week'], how="full", coalesce=True)
     we_evening = we_evening.with_columns(
         (pl.col('average_cons_we_evening') / pl.col('average_cons_we_noon')).alias('ratio_we_evening_noon')
     )
@@ -1323,7 +1323,7 @@ def r_we_evening_noon(df):
 def r_wd_night_day(df):
     wd_night = c_wd_night(df)
     wd_day = c_wd_noon(df)
-    wd_night = wd_night.join(wd_day, on=['year', 'week'], how='outer')
+    wd_night = wd_night.join(wd_day, on=['year', 'week'], how="full", coalesce=True)
     wd_night = wd_night.with_columns(
         (pl.col('average_cons_wd_night') / pl.col('average_cons_wd_noon')).alias('ratio_wd_night_day')
     )
@@ -1334,7 +1334,7 @@ def r_wd_night_day(df):
 def r_wd_morning_noon(df):
     wd_morning = c_wd_morning(df)
     wd_noon = c_wd_noon(df)
-    wd_morning = wd_morning.join(wd_noon, on=['year', 'week'], how='outer')
+    wd_morning = wd_morning.join(wd_noon, on=['year', 'week'], how="full", coalesce=True)
     wd_morning = wd_morning.with_columns(
         (pl.col('average_cons_wd_morning') / pl.col('average_cons_wd_noon')).alias('ratio_wd_morning_noon')
     )
@@ -1345,7 +1345,7 @@ def r_wd_morning_noon(df):
 def r_wd_evening_noon(df):
     wd_evening = c_wd_evening(df)
     wd_noon = c_wd_noon(df)
-    wd_evening = wd_evening.join(wd_noon, on=['year', 'week'], how='outer')
+    wd_evening = wd_evening.join(wd_noon, on=['year', 'week'], how="full", coalesce=True)
     wd_evening = wd_evening.with_columns(
         (pl.col('average_cons_wd_evening') / pl.col('average_cons_wd_noon')).alias('ratio_wd_evening_noon')
     )
@@ -1721,7 +1721,7 @@ def s_cor_wd_we(df):
     # Use conditional aggregation to calculate averages for weekdays and weekends
     result_df_weekday = df_weekday.group_by(['year', 'week', 'time']).agg(pl.mean('cons').alias('weekday_avg'))
     result_df_weekend = df_weekend.group_by(['year', 'week', 'time']).agg(pl.mean('cons').alias('weekend_avg'))
-    result_df = result_df_weekday.join(result_df_weekend, on=["year", "week", 'time'], how='outer')
+    result_df = result_df_weekday.join(result_df_weekend, on=["year", "week", 'time'], how="full", coalesce=True)
     # Calculate the correlation between weekday and weekend averages
     result_df = result_df.group_by(['year', 'week']).agg(
         pl.corr('weekday_avg', 'weekend_avg').alias('correlation')
