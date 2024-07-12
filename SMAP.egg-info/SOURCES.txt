@@ -1,0 +1,14 @@
+.gitignore
+README.md
+setup.py
+SMAP.egg-info/PKG-INFO
+SMAP.egg-info/SOURCES.txt
+SMAP.egg-info/dependency_links.txt
+SMAP.egg-info/requires.txt
+SMAP.egg-info/top_level.txt
+notebooks/testing_loop.ipynb
+notebooks/tests.ipynb
+smap/__init__.py
+smap/helpers.py
+smap/module.py
+tests/test_c_noon.py

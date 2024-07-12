@@ -699,7 +699,7 @@ def s_max_no_min(df):
     # get the minimum weekly consumption
     weekly_min = s_min(df)
     # outer join the weekly_max and weekly_min DataFrames on the year and week columns
-    weekly_max = weekly_max.join(weekly_min, on=['year', 'week'], how='outer')
+    weekly_max = weekly_max.join(weekly_min, on=['year', 'week'], how="full", coalesce=True)
     # subtract the minimum from the max_cons column of weekly_max and rename to max_cons_min
     weekly_max = weekly_max.with_columns(
         (pl.col('max_cons') - pl.col('min_cons')).alias('cons_max_no_min')
