@@ -11,7 +11,7 @@ setup(
     url='https://github.com/yourusername/SMAP',  # Replace with the link to your github or project website
     packages=find_packages(exclude=('tests', 'docs')),
     install_requires=[
-        'polars>=0.10.0'  # Replace with the version of Polars you are using or compatible with
+        'polars>=0.20.31'  # Replace with the version of Polars you are using or compatible with
 
     ],
     classifiers=[
