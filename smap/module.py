@@ -2214,6 +2214,10 @@ def ts_acf_mean3h_weekday(df):
 
     # Group by year and week and apply the autocorrelation function
     result_df = weekday_df.group_by(["year", "week"]).agg(pl.apply([pl.col('cons')],calc_autocorrelation).alias("mean_autocorrelation_wd"))
+    if result_df['mean_autocorrelation_wd'].dtype == pl.List:
+        result_df = result_df.with_columns(pl.col("mean_autocorrelation_wd").list.first())
+    else:
+        pass
     return result_df
 
 

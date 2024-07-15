@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: SMAP
-Version: 0.1.0
+Version: 0.1.1
 Summary: This libary is a recreation of an R package for smart meter alanlysis of consumption and temperature time-series. 
 Home-page: https://github.com/yourusername/SMAP
 Author: Evgenii Genov
@@ -13,7 +13,7 @@ Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.8
 Requires-Python: >=3.6
 Description-Content-Type: text/markdown
-Requires-Dist: polars>=0.10.0
+Requires-Dist: polars>=0.20.31
 
 
 # SMAP: Smart Meter Analytics Python 

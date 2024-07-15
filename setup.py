@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='SMAP',  # Replace with the name of your library
-    version='0.1.0',  # Replace with your library's version
+    version='0.1.1',  # Replace with your library's version
     author='Evgenii Genov',  # Replace with your name
     author_email='eugengenov@gmail.com',  # Replace with your email address
     description='This libary is a recreation of an R package for smart meter alanlysis of consumption and temperature time-series. ',  # Replace with a brief description of your library

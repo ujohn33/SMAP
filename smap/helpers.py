@@ -129,6 +129,6 @@ def calc_features_consumption(df):
     # Start with the first DataFrame and join the rest
     features = features_list[0].clone()
     for feature_df in features_list[1:]:
-        features = features.join(feature_df, how='outer', left_on=['year', 'week'], right_on=['year', 'week'])
+        features = features.join(feature_df, on=['year', 'week'], how="full", coalesce=True)
 
     return features
