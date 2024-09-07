@@ -6,6 +6,9 @@ from statsmodels.nonparametric.smoothers_lowess import lowess
 from statsmodels.tsa.seasonal import STL
 from statsmodels.tsa.stattools import acf
 from datetime import timedelta
+from .utilities import calculate_lags_for_3h
+from .decorators import replace_na_with_defaults_decorator
+from .constants import rep_zero, rep_min1
 
 
 # function inputs a time-series in polars, outputs average consumption for each weak 
@@ -946,6 +949,7 @@ def r_evening_noon(df):
 
 
 # function inputs a time-series in polars, outputs the ratio between c_week and s_max with min cons subtracted from both
+@replace_na_with_defaults_decorator(rep_zero, rep_min1)
 def r_mean_max_no_min(df):
     """
     Takes a DataFrame with a datetime column 'dt' and a consumption column
@@ -958,6 +962,8 @@ def r_mean_max_no_min(df):
         consumption minus the minimum consumption and the maximum consumption
         minus the minimum consumption
     """
+    print("Original df:")
+    print(df)
     # get the weekly average consumption minus the minimum consumption
     weekly_avg = c_week_no_min(df)
     # get the maximum consumption minus the minimum consumption
@@ -974,6 +980,7 @@ def r_mean_max_no_min(df):
 
 
 # function inputs a time-series in polars, outputs the ratio between c_evening and c_noon with min cons subtracted from both
+@replace_na_with_defaults_decorator(rep_zero, rep_min1)
 def r_evening_noon_no_min(df):
     """
     Takes a DataFrame with a datetime column 'dt' and a consumption column
@@ -1615,7 +1622,7 @@ def s_number_zeros(df):
     ])
     # Group by year and week, count the number of zeros in 'cons'
     result_df = df.group_by(["year", "week"]).agg(
-        (pl.col('cons') == 0).sum().alias('zero_count')
+        (pl.col('cons') == 0).sum().alias('s_number_zeros')
     )
     return result_df
 
@@ -1724,7 +1731,7 @@ def s_cor_wd_we(df):
     result_df = result_df_weekday.join(result_df_weekend, on=["year", "week", 'time'], how="full", coalesce=True)
     # Calculate the correlation between weekday and weekend averages
     result_df = result_df.group_by(['year', 'week']).agg(
-        pl.corr('weekday_avg', 'weekend_avg').alias('correlation')
+        pl.corr('weekday_avg', 'weekend_avg').alias('s_cor_wd_we')
     )
     return result_df
 
@@ -2028,7 +2035,7 @@ def t_above_1kw(df):
         pl.min('hour').alias('daily_t_above_1kW_hour')
     )
     first_exceeding_df = hourly_avg_df.group_by(['year', 'week']).agg(
-        pl.mean('daily_t_above_1kW_hour').alias('first_exceeding_1kW_hour')
+        pl.mean('daily_t_above_1kW_hour').alias('t_above_1kw')
     )
     return first_exceeding_df
 
@@ -2048,7 +2055,7 @@ def t_above_2kw(df):
         pl.min('hour').alias('daily_t_above_1kW_hour')
     )
     first_exceeding_df = hourly_avg_df.group_by(['year', 'week']).agg(
-        pl.mean('daily_t_above_1kW_hour').alias('first_exceeding_2kW_hour')
+        pl.mean('daily_t_above_1kW_hour').alias('t_above_2kw')
     )
     return first_exceeding_df
 
@@ -2072,7 +2079,7 @@ def t_above_mean(df):
         pl.first('hour').alias('daily_first_time_above_mean')
     )
     t_above_mean_df = joined_df.group_by(['year', 'week']).agg(
-        pl.mean('daily_first_time_above_mean').alias('first_time_above_mean')
+        pl.mean('daily_first_time_above_mean').alias('t_above_mean')
     )
     return t_above_mean_df
 
@@ -2154,10 +2161,10 @@ def ts_stl_varRem(df):
         remainder = result.resid
         return np.var(remainder)
 
-    result_df = df.group_by(["year", "week"]).agg(pl.apply([pl.col('cons')],calc_stl_variance).alias("mean_residual_stl"))
+    result_df = df.group_by(["year", "week"]).agg(pl.apply([pl.col('cons')],calc_stl_variance).alias("ts_stl_varRem"))
     # if the column is list[i64], we use expr.list.first() to get the first element of the list
     if result_df['mean_residual_stl'].dtype == pl.List:
-        result_df = result_df.with_columns(pl.col("mean_residual_stl").list.first())
+        result_df = result_df.with_columns(pl.col("ts_stl_varRem").list.first())
     else:
         pass
     return result_df
@@ -2170,22 +2177,24 @@ def ts_acf_mean3h(df):
         pl.col('dt').dt.week().alias("week")
     ])
 
+    lags = calculate_lags_for_3h(df)
+
     # Function to apply to each group
     def calc_autocorrelation(args: List[pl.Series]):
         # Check for missing values
         if args[0].is_null().any():
             return None
         # Calculate autocorrelation with lag up to 12
-        autocorr_values = acf(args[0].to_numpy(), nlags=12, fft=True, missing='conservative')
+        autocorr_values = acf(args[0].to_numpy(), nlags=lags, fft=True, missing='conservative')
         # Compute the mean of the autocorrelation values (excluding the first value at lag=0)
         mean_autocorr = np.mean(autocorr_values[1:])
         return mean_autocorr
 
     # Group by year and week and apply the autocorrelation function
-    result_df = df.group_by(["year", "week"]).agg(pl.apply([pl.col('cons')],calc_autocorrelation).alias("mean_autocorrelation"))
+    result_df = df.group_by(["year", "week"]).agg(pl.apply([pl.col('cons')],calc_autocorrelation).alias("ts_acf_mean3h"))
     # if the column is list[i64], we use expr.list.first() to get the first element of the list
-    if result_df['mean_autocorrelation'].dtype == pl.List:
-        result_df = result_df.with_columns(pl.col("mean_autocorrelation").list.first())
+    if result_df['ts_acf_mean3h'].dtype == pl.List:
+        result_df = result_df.with_columns(pl.col("ts_acf_mean3h").list.first())
     else:
         pass
     return result_df
@@ -2201,21 +2210,23 @@ def ts_acf_mean3h_weekday(df):
     # Filter for weekdays
     weekday_df = df.filter(pl.col('weekday') < 5)
 
+    lags = calculate_lags_for_3h(weekday_df)
+
     # Function to apply to each group
     def calc_autocorrelation(args: List[pl.Series]):
         # Check for missing values
         if args[0].is_null().any():
             return None
         # Calculate autocorrelation with lag up to 12
-        autocorr_values = acf(args[0].to_numpy(), nlags=12, fft=True, missing='conservative')
+        autocorr_values = acf(args[0].to_numpy(), nlags=lags, fft=True, missing='conservative')
         # Compute the mean of the autocorrelation values (excluding the first value at lag=0)
         mean_autocorr = np.mean(autocorr_values[1:])
         return mean_autocorr
 
     # Group by year and week and apply the autocorrelation function
-    result_df = weekday_df.group_by(["year", "week"]).agg(pl.apply([pl.col('cons')],calc_autocorrelation).alias("mean_autocorrelation_wd"))
-    if result_df['mean_autocorrelation_wd'].dtype == pl.List:
-        result_df = result_df.with_columns(pl.col("mean_autocorrelation_wd").list.first())
+    result_df = weekday_df.group_by(["year", "week"]).agg(pl.apply([pl.col('cons')],calc_autocorrelation).alias("acf_mean3h_weekday"))
+    if result_df['acf_mean3h_weekday'].dtype == pl.List:
+        result_df = result_df.with_columns(pl.col("acf_mean3h_weekday").list.first())
     else:
         pass
     return result_df
